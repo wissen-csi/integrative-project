@@ -1,0 +1,11 @@
+<!--URL_API_Google_Zxing-->
+https://zxing.github.io/zxing/apidocs/
+https://zxing.github.io/zxing/apidocs/com/google/zxing/BarcodeFormat.html
+https://zxing.github.io/zxing/apidocs/com/google/zxing/BinaryBitmap.html
+https://zxing.github.io/zxing/apidocs/com/google/zxing/MultiFormatReader.html
+https://zxing.github.io/zxing/apidocs/com/google/zxing/client/j2se/MatrixToImageConfig.html
+https://zxing.github.io/zxing/apidocs/com/google/zxing/client/j2se/MatrixToImageWriter.html
+<!--URL_API_Cloudinary-->
+https://cloudinary.com/documentation/java_integration
+https://cloudinary.com/documentation/java_image_and_video_upload
+<!--URL_API_FALTA-->

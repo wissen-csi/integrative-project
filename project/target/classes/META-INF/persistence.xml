@@ -1,0 +1,15 @@
+<persistence xmlns= "http://xmlns.jcp.org/xml/ns/persistence" version = "2.2">
+    <persistence-unit name ="santoto_universidad">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <properties>
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://b4coppb4ec8die4lohgb-mysql.services.clever-cloud.com/b4coppb4ec8die4lohgb"/>
+            <property name="javax.persistence.jdbc.user" value="u2b8ywzvmh7o2tmq"/>
+            <property name="javax.persistence.jdbc.password" value="mZGtyBSIr0dFnwxuQb7F"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+          
+
+        </properties>
+    </persistence-unit>
+</persistence>
