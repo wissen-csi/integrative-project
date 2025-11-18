@@ -1,5 +1,7 @@
 package com.prototype.model.entities;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -12,117 +14,133 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-
-import com.prototype.model.apis.ApiCloudinary;
-import com.prototype.model.config.UUIDGenerator;
 import com.prototype.model.enums.EquipmentStatus;
 import com.prototype.model.enums.EquipmentType;
 
-
 /**
- * La clase Equipment representa un objeto de tipo equipo.
- * Esta clase será reconocida como la clase padre, que tiene
- * por hijas a las clases TechEquipment y BiomedicalEquipment.
- * 
- * Adicional a este tipo de clase se le conoce como POJO que
- * significa Plain Old Java Object, ya que solo posee atributos
- * constructores, getters and setters y el método toString().
- * 
- * @author Salomón Valero Bejarano
+ * Base abstract entity that represents a generic equipment unit managed by the
+ * system. This class provides the shared structure and attributes for all
+ * equipment types (e.g., technological, medical, biomedical), while allowing
+ * specialized subclasses to extend it.
+ *
+ * <p>The inheritance strategy is {@code JOINED}, meaning each subclass has its
+ * own table while the common attributes remain in the {@code equipments} table.</p>
+ *
+ * <p>This entity includes general descriptive information such as serial number,
+ * brand, model, classification type, operational status, the stored image
+ * reference, and the provider associated with the equipment.</p>
  */
 @Entity
-@Table(name="equipments")
+@Table(name = "equipments")
 @Inheritance(strategy = InheritanceType.JOINED)
-abstract class Equipment {
-    protected static ApiCloudinary apiCloudinary = new ApiCloudinary();
+public abstract class Equipment {
+
     /**
-     * Attributes
-     * 
-     * Los atributos serán privados, porque solo se pueden
-     * modificar dentro de la clase. Si los intentamos actualizar
-     * una vez creada la instancia, debemos utilizar métodos
-     * setter, por ejemplo: El atributo serial es privado por lo 
-     * tanto, solo se puede actualizar dentro del código de
-     * la clase, o utilizando la función setSerial(), enviando
-     * como parámetro el nuevo valor.
-     * 
-     *  */ 
+     * Automatically generated identifier for the equipment.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    /**
+     * Serial number assigned to the equipment. Cannot be null.
+     */
     @Column(nullable = false)
     private String serial;
+
+    /**
+     * Brand or manufacturer of the equipment.
+     */
     @Column(nullable = false)
     private String brand;
+
+    /**
+     * Model name or reference of the equipment.
+     */
     @Column(nullable = false)
-    private String model;   
+    private String model;
+
+    /**
+     * General classification of the equipment (computing, medical,
+     * laboratory, audiovisual, etc.).
+     */
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private EquipmentType type;
+
+    /**
+     * Operational state of the equipment (new, in use, under maintenance, etc.).
+     */
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private EquipmentStatus state;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="id_provider",nullable = true)
-    private Provider provider;
-    @Column(nullable = false)
-    private String imagePath;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name ="id_persona",nullable = true)
-    private Person person;
-    @Column(name="code_qr")
-    private String codeQR;
 
     /**
-     *  Constructors 
-     * 
-     * Los constructores permiten crear una instancia u objeto
-     * de la clase, por defecto se genera el constructor vacío,
-     * pero podemos personalizarlo asignando valores por defecto
-     * dentro del mismo.
-     * 
-     * También podemos hacer sobrecarga de constructores, para
-     * aceptar ciertos valores al momento de crear la instancia
-     * y asignarlos como valor inicial (inicializar) los atributos
-     * de la clase.
-     * 
-     * */ 
+     * Path or identifier of the stored image associated with the equipment.
+     */
+    @Column(name = "image_path", nullable = false)
+    private String imagePath;
 
-     /** 
-      * Contructor vacío de equipment
+    /**
+     * Supplier associated with this equipment. This field is optional.
+     * 
+     * <p>Loaded lazily to avoid unnecessary fetch operations.</p>
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_provider", nullable = true)
+    private Provider provider;
 
-       @ params - Sin parámetros 
-    
-       */
-    public Equipment(){}
-    public Equipment(Long id,String serial, String brand, String model, EquipmentType type, 
-    EquipmentStatus state, Provider provider, String imagePath) {
+    /**
+     * List of entry requests made for this equipment. Represents the one-to-many
+     * relationship between equipment and its authorization requests.
+     */
+    @OneToMany(mappedBy = "equipment")
+    private List<EntryRequest> entryRequests;
+
+    /**
+     * Default constructor required by JPA.
+     */
+    public Equipment() {
+    }
+
+    /**
+     * Deprecated constructor including the ID.
+     *
+     * <p>Kept only for compatibility with previous initialization patterns. New
+     * equipment instances should rely on constructors where the ID is generated by
+     * the persistence layer.</p>
+     */
+    @Deprecated
+    public Equipment(Long id, String serial, String brand, String model, EquipmentType type,
+            EquipmentStatus state, String imagePath, Provider provider) {
         this.id = id;
         this.serial = serial;
         this.brand = brand;
         this.model = model;
         this.type = type;
         this.state = state;
-        this.provider = provider;
         this.imagePath = imagePath;
-        this.codeQR = UUIDGenerator.generate();
+        this.provider = provider;
+        this.entryRequests = new ArrayList<>();
     }
-    /**
-     * Contructor con parámetros de equipment
-     * 
-     * @param serial - registro serial del equipo
-     * @param brand - marca del equipo
-     * @param model - modelo del equipo
-     * @param type -
-     * @param state -
-     * @param provider - Id del proovedor
-     * @param imagePath - Ruta de la imagen cargada
-     */
 
-    public Equipment(String serial, String brand, String model, EquipmentType type, 
-    EquipmentStatus state, Provider provider, String imagePath) {
+    /**
+     * Constructor for creating equipment instances without specifying an ID.
+     * The ID will be generated by the database.
+     *
+     * @param serial      equipment serial number
+     * @param brand       manufacturer or brand
+     * @param model       model name
+     * @param type        general classification of the equipment
+     * @param state       operational status
+     * @param imagePath   reference to the stored image
+     * @param provider    supplier associated with the equipment
+     */
+    public Equipment(String serial, String brand, String model, EquipmentType type,
+            EquipmentStatus state, String imagePath, Provider provider) {
         this.id = null;
         this.serial = serial;
         this.brand = brand;
@@ -131,163 +149,123 @@ abstract class Equipment {
         this.state = state;
         this.provider = provider;
         this.imagePath = imagePath;
-        this.codeQR = UUIDGenerator.generate();
     }
 
-
-    /**getters and setters:
-     * 
-     * Los getters permiten obtener el valor de un atributo,
-     * Los setters permiten actualizar el valor de un atributo,
-     * 
-     * Ambos son muy útiles cuando trabajamos con atributos
-     * cuya visibilidad sea private o protected.
-     */
-
-    /**
-     * Método get que retorna el valor del Serial
-     * 
-     *  @return - String con el valor del serial
-      */
-
-        public Long getId() {
+    /** @return equipment ID. */
+    public Long getId() {
         return id;
     }
 
+    /** @param id sets the equipment ID. */
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    /** @return equipment serial number. */
     public String getSerial() {
         return serial;
     }
 
-    /** 
-     * Método set que actualiza o modifica el valor almacenado
-     * 
-     * @param serial - String con el nuevo valor del serial.
-     *  */
+    /** @param serial sets the equipment serial number. */
     public void setSerial(String serial) {
         this.serial = serial;
     }
 
-    /**
-     *  Método get que retorna el valor del Brand.
-     *  
-     *  @return - String con el valor del Brand
-     */
+    /** @return equipment brand. */
     public String getBrand() {
         return brand;
     }
 
-    /**
-     * Método set que actualiza o modifica el valor almacenado  
-     * @param brand - String con el nuevo valor del Brand.
-     */
+    /** @param brand sets the equipment brand. */
     public void setBrand(String brand) {
         this.brand = brand;
     }
 
-    /**
-     *  Método get que retorna el valor del Model.
-     *  
-     *  @return - String con el valor del Model
-     */
+    /** @return equipment model. */
     public String getModel() {
         return model;
     }
 
-    /**
-     * Método set que actualiza o modifica el valor almacenado
-     * @param model - String con el nuevo valor del Model.
-     */
+    /** @param model sets the equipment model. */
     public void setModel(String model) {
         this.model = model;
     }
 
-    /**
-     * Método get que retorna el valor del Type.
-     * @return - String con el valor del Type
-     */
+    /** @return equipment type. */
     public EquipmentType getType() {
         return type;
     }
 
-    /**
-     * Método set que actualiza o modifica el valor almacenado.
-     * @param type - String con el nuevo valor del Type.
-     */
+    /** @param type sets the equipment type. */
     public void setType(EquipmentType type) {
         this.type = type;
     }
 
-    /**
-     * Método get que retorna el valor del State.
-     * @return - String con el valor del State.
-     */
+    /** @return current equipment state. */
     public EquipmentStatus getState() {
         return state;
     }
 
-    /** 
-     * Método set que actualiza o modifica el valor almacenado.
-     * @param state - String con el nuevo valor del State.
-     */
+    /** @param state updates the equipment state. */
     public void setState(EquipmentStatus state) {
         this.state = state;
     }
 
-    /**
-     * Método get que retorna el valor del Provider.
-     * @return - String con el valor del Provider.
-     */
-    public Provider getProvider() {
-        return provider;
-    }
-
-    /**
-     * Método set que actualiza o modifica el valor almacenado.
-     * @param provider - String con el nuevo valor del Provider.
-     */
-    public void setProvider(Provider provider) {
-        this.provider = provider;
-    }
-
-    /**
-     * Método get que retorna el valor del ImagePath.
-     * @return
-     */
+    /** @return path or identifier of the equipment image. */
     public String getImagePath() {
         return imagePath;
     }
 
-    /**
-     * Método set que actualiza o modifica el valor almacenado.
-     * @param imagePath - String con el nuevo valor del ImagePath.
-     */
+    /** @param imagePath sets the equipment image path. */
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
     }
 
-    /** 
-     * El metodo toString() es un método que está definido
-     * por java para mostrar el identificador de la ubicación 
-     * de memoria en la que se encuentra una instancia u objeto.
-     * 
-     * Usamos el decorador @Override para sobreescribir la
-     * funcionalidad original del método para lograr que
-     * se pueda mostrar el contenido de la instancia de una manera
-     * más clara al momento de leerlo.
-     */
+    /** @return provider associated with the equipment. */
+    public Provider getProvider() {
+        return provider;
+    }
 
+    /** @param provider sets the equipment provider. */
+    public void setProvider(Provider provider) {
+        this.provider = provider;
+    }
+
+    /** @return list of entry requests associated with this equipment. */
+    public List<EntryRequest> getEntryRequests() {
+        return entryRequests;
+    }
+
+    /**
+     * Adds a new entry request to the equipment.
+     */
+    public void addEntryRequests(EntryRequest entryRequest) {
+        entryRequests.add(entryRequest);
+    }
+
+    /**
+     * Removes an entry request from the equipment.
+     */
+    public void removeEntryRequests(EntryRequest entryRequest) {
+        entryRequests.remove(entryRequest);
+    }
+
+    /**
+     * Returns a textual representation of the equipment, including its basic
+     * attributes and the number of associated entry requests.
+     */
     @Override
     public String toString() {
-        return "Equipment{" +
-                "id=" + id +
-                ", serial='" + serial + '\'' +
-                ", brand='" + brand + '\'' +
-                ", model='" + model + '\'' +
-                ", type='" + type + '\'' +
-                ", state='" + state + '\'' +
-                ", provider='" + provider + '\'' +
-                ", imagePath='" + imagePath + '\'' +
-                '}';
+        return "Equipment {id=" + id +
+           ", serial='" + serial + "'" +
+           ", brand='" + brand + "'" +
+           ", model='" + model + "'" +
+           ", type='" + type + "'" +
+           ", state='" + state + "'" +
+           ", imagePath='" + imagePath + "'" +
+           ", provider=" + provider +
+           ", entryRequests=" + entryRequests.size() +
+           "}";
     }
 
 }

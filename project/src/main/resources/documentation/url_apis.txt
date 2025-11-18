@@ -1,0 +1,24 @@
+<!--URL_API_Google_Zxing-->
+https://zxing.github.io/zxing/apidocs/com/google/zxing/client/j2se/BufferedImageLuminanceSource.html
+https://zxing.github.io/zxing/apidocs/com/google/zxing/common/HybridBinarizer.html
+https://zxing.github.io/zxing/apidocs/com/google/zxing/BinaryBitmap.html
+https://bytedeco.org/javacv/apidocs/index.html?org/bytedeco/javacv/package-summary.html
+https://zxing.github.io/zxing/apidocs/com/google/zxing/MultiFormatReader.html
+https://zxing.github.io/zxing/apidocs/com/google/zxing/LuminanceSource.html
+https://zxing.github.io/zxing/apidocs/com/google/zxing/qrcode/QRCodeReader.html
+https://zxing.github.io/zxing/apidocs/com/google/zxing/Result.html
+<!--https://zxing.github.io/zxing/apidocs/-->
+<!--https://zxing.github.io/zxing/apidocs/com/google/zxing/BarcodeFormat.html-->
+<!--https://zxing.github.io/zxing/apidocs/com/google/zxing/BinaryBitmap.html-->
+<!--https://zxing.github.io/zxing/apidocs/com/google/zxing/MultiFormatReader.html-->
+<!--https://zxing.github.io/zxing/apidocs/com/google/zxing/client/j2se/MatrixToImageConfig.html-->
+<!--https://zxing.github.io/zxing/apidocs/com/google/zxing/client/j2se/MatrixToImageWriter.html-->
+<!--URL_API_Cloudinary-->
+<!--https://cloudinary.com/documentation/java_integration-->
+<!--https://cloudinary.com/documentation/java_image_and_video_upload-->
+<!--URL_API_JavaCV-->
+<!--https://bytedeco.org/javacv/apidocs/org/bytedeco/javacv/package-summary.html-->
+<!--URL_DOCUMENTACION_JAVA-->
+https://docs.oracle.com/javase/8/docs/api/java/awt/image/RenderedImage.html   //Es una interfaz por ende polimorficamente se puede usar el buffered
+https://docs.oracle.com/javase/8/docs/api/javax/imageio/ImageIO.html?utm_source=chatgpt.
+https://docs.oracle.com/javase/8/docs/api/java/io/File.html

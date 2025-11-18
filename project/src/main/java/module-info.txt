@@ -1,0 +1,17 @@
+module com.prototype {
+    requires javafx.controls;
+    requires javafx.fxml;
+    requires java.persistence;
+    requires cloudinary.core;
+    requires com.google.zxing;
+    requires com.google.zxing.javase;
+    requires java.desktop;
+    requires java.sql;
+    requires org.hibernate.orm.core;
+    
+    opens com.prototype to javafx.fxml;
+    opens com.prototype.controller to javafx.fxml;
+    opens com.prototype.model.entities to javafx.fxml, org.hibernate.orm.core;
+    exports com.prototype;
+    exports com.prototype.controller;
+}

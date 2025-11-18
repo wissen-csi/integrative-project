@@ -1,18 +1,19 @@
 package com.prototype.model.config;
+
 import java.util.UUID;
 
 /**
- * Generador de identificadores únicos basados en el
- * estandar uuid v4 }
+ * Generator of unique identifiers based on the
+ * uuid v4 estandar }
  * 
- * @author Salomón Valero Bejarano
+ * @author Salomón Valero Bejarano, David Camilo Preciado
  */
 public class UUIDGenerator {
 
      /**
-      * Genera un identificador único.
+      * Generate a unique identifier.
       * 
-      * @return Id de tipo string en formato uuid v4
+      * @return String ID in uuid v4 format
       */
 
      public static String generate() {

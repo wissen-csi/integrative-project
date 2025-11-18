@@ -12,156 +12,182 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.prototype.model.config.UUIDGenerator;
-
 /**
- * La clase {@code Provider} representa a un proveedor dentro del sistema del hospital.
+ * Entity representing an equipment provider registered within the system.
  * 
- * <p>
- * Los proveedores son las entidades externas responsables de suministrar equipos, 
- * repuestos o servicios relacionados con los dispositivos tecnológicos o biomédicos 
- * registrados en el inventario.
- * </p>
- * 
- * <p>
- * Esta clase es un POJO (Plain Old Java Object), ya que contiene únicamente atributos,
- * constructores, getters, setters y un método {@code toString()} para representar
- * la información del proveedor de forma legible.
- * </p>
- * 
- * @author 
- * @version 1.0
+ * <p>A provider supplies technological or biomedical equipment, and this
+ * entity stores its basic business information such as name, tax ID, contact
+ * email, and address.</p>
+ *
+ * <p>Each provider may be associated with multiple {@link Equipment}
+ * instances, forming a one-to-many relationship.</p>
  */
 @Entity
-@Table(name ="providers")
+@Table(name = "providers")
 public class Provider {
 
-    // ===================== ATRIBUTOS =====================
-
     /**
-     * Identificador único del proveedor.
-     * Se genera automáticamente con {@link UUIDGenerator} si no se pasa por parámetro.
+     * Automatically generated identifier for the provider.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
-     * Nombre del proveedor o empresa.
+     * Legal or commercial name of the provider.
      */
-    @Column(nullable = false)
+    @Column(nullable = false, length = 45)
     private String name;
 
     /**
-     * Identificador tributario del proveedor (por ejemplo, NIT o RUT).
-     * Se genera concatenando un prefijo "taxId-" con un UUID aleatorio.
+     * Tax identification number of the provider.
+     *
+     * <p>Typically corresponds to the RUC, NIT, or equivalent tax registry
+     * depending on the country.</p>
      */
-    @Column(name = "tax_id", nullable = false)
+    @Column(name = "tax_id", nullable = false, length = 13)
     private String taxId;
 
     /**
-     * Correo electrónico de contacto del proveedor.
+     * Contact email used for communication with the provider.
      */
-    @Column(name = "contact_email",nullable = false)
+    @Column(name = "contact_email", nullable = false, length = 150)
     private String contactEmail;
-    @OneToMany(mappedBy = "Provider",cascade = {CascadeType.MERGE,CascadeType.REFRESH,CascadeType.REMOVE})
+
+    /**
+     * List of equipment items supplied by this provider.
+     *
+     * <p>The cascade configuration allows merge, refresh, and remove operations
+     * to propagate to the associated equipment records.</p>
+     */
+    @OneToMany(mappedBy = "provider", cascade = { CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE })
     private List<Equipment> equipments;
 
-    // ===================== CONSTRUCTORES =====================
-    public Provider(){
-    }
     /**
-     * Constructor completo para inicializar un proveedor con un ID definido.
-     * 
-     * @param id identificador único del proveedor.
-     * @param name nombre del proveedor.
-     * @param taxId identificador tributario (NIT o equivalente).
-     * @param contact correo electrónico de contacto.
+     * Physical or administrative address of the provider.
      */
-    public Provider(Long id, String name, String taxId, String contact) {
+    @Column(nullable = false, length = 100)
+    private String address;
+
+    /**
+     * Default constructor required by JPA.
+     */
+    public Provider() {
+    }
+
+    /**
+     * Deprecated full constructor including the ID.
+     *
+     * <p>Retained for compatibility. New provider records should rely on the
+     * constructor where the ID is managed by the persistence layer.</p>
+     *
+     * @param id        provider ID
+     * @param name      provider's legal or commercial name
+     * @param taxId     provider's tax identification number
+     * @param contact   provider's contact email
+     * @param address   provider's address
+     */
+    @Deprecated
+    public Provider(Long id, String name, String taxId, String contact, String address) {
         this.id = id;
         this.name = name;
         this.taxId = taxId;
         this.contactEmail = contact;
+        this.address = address;
         this.equipments = new ArrayList<>();
     }
 
     /**
-     * Constructor que genera automáticamente el ID del proveedor y su taxId.
-     * 
-     * @param name nombre del proveedor.
-     * @param taxId identificador tributario (NIT o equivalente).
-     * @param contact correo electrónico de contacto.
+     * Constructor used to create new providers without specifying an ID.
+     * The ID will be automatically generated.
+     *
+     * @param name      provider's legal name
+     * @param taxId     tax identification number
+     * @param contact   contact email
+     * @param address   provider address
      */
-    public Provider(String name, String taxId, String contact) {
+    public Provider(String name, String taxId, String contact, String address) {
         this.id = null;
         this.name = name;
-        this.taxId = "taxId-" + UUIDGenerator.generate();
+        this.taxId = taxId;
         this.contactEmail = contact;
+        this.address = address;
+        this.equipments = new ArrayList<>();
     }
 
-    // ===================== GETTERS Y SETTERS =====================
-
-    /**
-     * Obtiene el identificador único del proveedor.
-     * 
-     * @return id del proveedor.
-     */
+    /** @return provider ID. */
     public Long getId() {
         return id;
     }
 
-    /**
-     * Obtiene el nombre del proveedor.
-     * 
-     * @return nombre del proveedor.
-     */
+    /** @param id sets the provider ID. */
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    /** @return provider name. */
     public String getName() {
         return name;
     }
 
-    /**
-     * Actualiza el nombre del proveedor.
-     * 
-     * @param name nuevo nombre del proveedor.
-     */
+    /** @param name sets the provider name. */
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * Obtiene el identificador tributario del proveedor.
-     * 
-     * @return código tributario generado o asignado.
-     */
+    /** @return tax identification number. */
     public String getTaxId() {
         return taxId;
     }
 
-    /**
-     * Obtiene el correo electrónico de contacto del proveedor.
-     * 
-     * @return dirección de correo electrónico.
-     */
-    public String getContact() {
+    /** @param taxId sets the tax identification number. */
+    public void setTaxId(String taxId) {
+        this.taxId = taxId;
+    }
+
+    /** @return provider contact email. */
+    public String getContactEmail() {
         return contactEmail;
     }
 
-    // ===================== MÉTODO toString =====================
+    /** @param contactEmail sets the provider contact email. */
+    public void setContactEmail(String contactEmail) {
+        this.contactEmail = contactEmail;
+    }
+
+    /** @return list of equipment supplied by the provider. */
+    public List<Equipment> getEquipments() {
+        return equipments;
+    }
+
+    /** @param equipments sets the list of supplied equipment. */
+    public void setEquipments(List<Equipment> equipments) {
+        this.equipments = equipments;
+    }
+
+    /** @return provider address. */
+    public String getAddress() {
+        return address;
+    }
+
+    /** @param address sets the provider address. */
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     /**
-     * Retorna una representación en texto del proveedor con sus datos principales.
-     * 
-     * @return cadena formateada con la información del proveedor.
+     * Returns a textual representation of the provider including its basic
+     * attributes and associated equipment list.
      */
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("El proveedor tiene los siguientes datos: ").append("\n");
-        builder.append("id: ").append(id).append("\n");
-        builder.append("name: ").append(name).append("\n");
-        builder.append("taxId: ").append(taxId).append("\n");
-        builder.append("contactEmail: ").append(contactEmail).append("\n");
-        return builder.toString(); // se llama al objeto y se convierte a String con toString()
+        return "Provider {id=" + id + 
+           ", name=" + name + 
+           ", taxId=" + taxId + 
+           ", contactEmail=" + contactEmail + 
+           ", equipments=" + equipments + 
+           ", address=" + address + 
+           "}";
     }
+
 }
