@@ -1,0 +1,9 @@
+com.prototype
+com.prototype.controller
+com.prototype.model.apis
+com.prototype.model.config
+com.prototype.model.daos
+com.prototype.model.entities
+com.prototype.model.enums
+com.prototype.model.helpers
+com.prototype.services

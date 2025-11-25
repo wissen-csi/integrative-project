@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="TOP_CENTER" prefHeight="656.0" prefWidth="725.0" spacing="10" styleClass="equipment-root" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.prototype.controller.EntryRequestController">
+
+   <children>
+      <!-- TÍTULO -->
+        <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="549.0" style="-fx-font-size: 20px; -fx-font-weight: bold;" styleClass="equip-title" stylesheets="@../../styles.css" text="GESTION DE INGRESOS Y EGRESOS" />
+
+      <!-- FORMULARIO -->
+      <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+         <children>
+            <GridPane hgap="10" styleClass="form-box" vgap="10">
+               <columnConstraints>
+                  <ColumnConstraints />
+                  <ColumnConstraints />
+                  <ColumnConstraints maxWidth="108.0" minWidth="10.0" prefWidth="108.0" />
+                  <ColumnConstraints maxWidth="95.0" minWidth="10.0" prefWidth="92.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+               </rowConstraints>
+
+               <children>
+                  <!-- ID de la solicitud -->
+                  <Label fx:id="requestIdLabel" styleClass="form-label" text="ID:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                  <TextField fx:id="requestIdTextField" promptText="ID (para buscar, actualizar, eliminar)" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                  <!-- ID Persona -->
+                  <Label fx:id="personIdLabel" styleClass="form-label" text="ID Persona:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                  <TextField fx:id="personIdTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                  <!-- Motivo -->
+                  <Label fx:id="purposeLabel" styleClass="form-label" text="Motivo:" GridPane.rowIndex="2" />
+                  <TextField fx:id="purposeTextField" promptText="Motivo del ingreso" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                  <!-- Tipo de solicitud -->
+                  <Label fx:id="requestTypeLabel" styleClass="form-label" text="Tipo De Solicitud:" GridPane.rowIndex="3" />
+                  <ComboBox fx:id="requestTypeComboBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                  <!-- ID del Equipo -->
+                  <Label fx:id="equipmentIdLabel" prefWidth="200.0" styleClass="form-label" text="ID del Equipo:" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                  <TextField fx:id="equipmentIdTextField" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+
+                  <Label prefWidth="800.0" styleClass="form-label" text="fecha y hora registro" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <TextField fx:id="localDateTime" prefWidth="400.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+
+                  <Button fx:id="generateQR" mnemonicParsing="false" onAction="#generationQR" prefHeight="39.0" prefWidth="152.0" styleClass="equip-button" text="generar qr" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                  <Button fx:id="readQR" mnemonicParsing="false" onAction="#bufferedQR" prefHeight="39.0" prefWidth="123.0" styleClass="equip-button" text="leer qr" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+               </children>
+            </GridPane>
+
+            <ImageView fx:id="imageQR" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+         </children>
+      </HBox>
+
+      <!-- BOTONES -->
+      <HBox alignment="CENTER" spacing="10">
+         <children>
+            <Button fx:id="createButton" onAction="#handleCreate" styleClass="equip-button" text="Crear" />
+            <Button fx:id="updateButton" onAction="#handleUpdate" styleClass="equip-button" text="Actualizar" />
+            <Button fx:id="deleteButton" onAction="#handleDelete" styleClass="equip-button" text="Eliminar" />
+            <Button fx:id="findByIdButton" onAction="#handleSearch" styleClass="equip-button" text="Buscar por ID" />
+            <Button fx:id="cleanFormButton" onAction="#handleClear" styleClass="equip-button" text="Limpiar Formulario" />
+         </children>
+      </HBox>
+
+      <!-- ESTADO -->
+      <Label fx:id="statusLabel" styleClass="status-label" />
+
+      <!-- TABLA -->
+      <TableView fx:id="entryRequestTable" prefHeight="417.0" prefWidth="475.0" styleClass="table-view" VBox.vgrow="ALWAYS">
+         <columns>
+            <TableColumn fx:id="idColumn" prefWidth="50" text="ID" />
+            <TableColumn fx:id="purposeColumn" prefWidth="120.0" text="Motivo" />
+            <TableColumn fx:id="requestTypeColumn" prefWidth="120.0" text="TipoDeSolicitud" />
+            <TableColumn fx:id="equipmentColumn" prefWidth="120.0" text="EquipoAsociado" />
+            <TableColumn fx:id="personColumn" prefWidth="120.0" text="PersonaAsociada" />
+            <TableColumn fx:id="requestedAt" prefWidth="130.0" text="fecha y hora registro" />
+         </columns>
+      </TableView>
+   </children>
+</VBox>

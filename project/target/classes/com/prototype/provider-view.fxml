@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.prototype.controller.ProviderController" alignment="TOP_CENTER" spacing="10" styleClass="equipment-root" stylesheets="@../../styles.css">
+
+    <children>
+
+        <!-- TÍTULO -->
+        <Label prefHeight="30.0" alignment="TOP_CENTER" prefWidth="549.0" style="-fx-font-size: 20px; -fx-font-weight: bold;" styleClass="equip-title" stylesheets="@../../styles.css" text="GESTION DE PROVEEDORES" />
+
+        <!-- FORMULARIO -->
+        <HBox alignment="CENTER" spacing="20.0">
+            <children>
+                <GridPane hgap="10" vgap="10" alignment="CENTER" prefHeight="264.0" prefWidth="500.0" styleClass="form-box" stylesheets="@../../Stylesview.css">
+                    <columnConstraints>
+                        <ColumnConstraints />
+                        <ColumnConstraints />
+                        <ColumnConstraints minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints /> <!-- 0 -->
+                        <RowConstraints /> <!-- 1 -->
+                        <RowConstraints /> <!-- 2 -->
+                        <RowConstraints /> <!-- 3 -->
+                        <RowConstraints /> <!-- 4 -->
+                    </rowConstraints>
+
+                    <children>
+                        <!-- FILA 0: ID -->
+                        <Label text="ID:" styleClass="form-label"
+                               GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                        <TextField fx:id="idTextField"
+                                   promptText="ID (para buscar, actualizar, eliminar)"
+                                   GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                        <!-- FILA 1: NOMBRE PROVEEDOR -->
+                        <Label text="Nombre Proveedor:" styleClass="form-label"
+                               GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <TextField fx:id="providerNameTextField"
+                                   promptText="Nombre del proveedor"
+                                   GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                        <!-- FILA 2: ID TRIBUTARIO -->
+                        <Label text="Identificador Tributario:" styleClass="form-label"
+                               GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <TextField fx:id="taxIdTextField"
+                                   promptText="Identificador tributario (NIT o equivalente)"
+                                   GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                        <!-- FILA 3: EMAIL CONTACTO -->
+                        <Label text="Email de contacto:" styleClass="form-label"
+                               GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                        <TextField fx:id="contactEmailTextField"
+                                   promptText="Correo electrónico de contacto"
+                                   GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                        <!-- FILA 4: DIRECCIÓN -->
+                        <Label text="Dirección:" styleClass="form-label"
+                               GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                        <TextField fx:id="addressTextField"
+                                   promptText="Dirección del proveedor"
+                                   GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                    </children>
+                </GridPane>
+            </children>
+        </HBox>
+
+        <!-- BOTONES -->
+        <HBox alignment="CENTER" spacing="10" styleClass="provider-root" stylesheets="@../../styles.css">
+            <children>
+                <Button fx:id="createButton" onAction="#handleCreate" styleClass="equip-button" text="Crear" />
+                <Button fx:id="updateButton" onAction="#handleUpdate" styleClass="equip-button" text="Actualizar" />
+                <Button fx:id="deleteButton" onAction="#handleDelete" styleClass="equip-button" text="Eliminar" />
+                <Button fx:id="findByIdButton" onAction="#handleSearch" styleClass="equip-button" text="Buscar por ID" />
+                <Button fx:id="cleanFormButton" onAction="#handleClear" styleClass="equip-button" text="Limpiar Formulario" />
+            </children>
+        </HBox>
+
+        <!-- ESTADO -->
+        <Label fx:id="statusLabel" style="-fx-text-fill: blue; -fx-padding: 5;" />
+
+        <!-- TABLA -->
+        <TableView fx:id="providerTable" styleClass="table-row-cell" stylesheets="@../../styles.css" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="idColumn" prefWidth="50" text="ID" />
+                <TableColumn fx:id="nameProviderColumn" prefWidth="150" text="NombreProveedor" />
+                <TableColumn fx:id="tributaryIdColumn" prefWidth="120" text="IdTributario" />
+                <TableColumn fx:id="contactEmailColumn" prefWidth="150" text="EmailContacto" />
+                <TableColumn fx:id="addressColumn" prefWidth="180" text="Direccion" />
+            </columns>
+        </TableView>
+
+    </children>
+</VBox>
